@@ -1,5 +1,3 @@
-//1 ahora usaremos los efectos para el cambio de color de acuerdo al countdown. si bien podriamos hacer todo en el mismo useEffect
-//eso está mal porque los efectos deben ser atómicos, es decir solo hacer una cosa weno? asi que hagamonos otro
 import { useEffect, useState } from "react";
 
 const colors = {
@@ -32,7 +30,7 @@ export const TrafficLightWithUseEffect = () => {
         }
     },[countdown]) 
 
-    //2 entonces acá creamos nuestro nuevo efecto y evaluamos, cuando el countdown sea 0, restablecemos la cuenta y cambiamos de color
+
     useEffect(() => {
       if(countdown === 0){
         setcountdown(5);
@@ -65,7 +63,7 @@ export const TrafficLightWithUseEffect = () => {
 
           <h1 className="text-white text-xl font-thin">Semaforo con use effect</h1>
           <h2 className="text-white text-xl"> Countdown {countdown}</h2>
-          {/* Acá finalmente creamos una barra de progreso donde le pasamos el countdown dividido en 5 y multiplicado por 100 para que vaya desde el ancho maximo descendiendo */}
+      
           <div className="w-64 bg-gray-700 rounded-full h-2">
             <div className="bg-blue-500 h-2 rounded-full transition-all duration-1000 ease-linear" style={{width:`${(countdown/5)*100}%`}}></div>
           </div>
