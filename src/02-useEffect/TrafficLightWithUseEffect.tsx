@@ -1,4 +1,5 @@
-//1 lo que queremos hacer acá es aplicar un efecto despues del cambio de estado, en este caso un contador que retroceda
+//1 ahora usaremos los efectos para el cambio de color de acuerdo al countdown. si bien podriamos hacer todo en el mismo useEffect
+//eso está mal porque los efectos deben ser atómicos, es decir solo hacer una cosa weno? asi que hagamonos otro
 import { useEffect, useState } from "react";
 
 const colors = {
@@ -14,24 +15,47 @@ type TrafficLightColor = 'red'|'green'|'yellow'
 export const TrafficLightWithUseEffect = () => {
 
     const [light, setLight] =useState<TrafficLightColor>('red'); 
-    //2 lo primero será obtener un nuevo estado para el valor de la cuenta regresiva
+
     const [countdown, setcountdown] = useState(5);
 
-    //3 luego creamos el useEffect, recuerda que este recibe una funcion callback donde establecimos todo.
     useEffect(() => {
 
-      if (countdown === 0) return; //validacion pequeña
+        if (countdown === 0) return; 
 
-      const interval = setInterval(() => { //5 definimos el setInterval que ejecuta una funcion de forma repetida cada cierta cantidad de tiempo
-        setcountdown(prev => prev-1)
-      },1000);
+        const interval = setInterval(() => {
+          setcountdown(prev => prev-1)
+        },1000);
 
-      return () => { //6 la funcion de retorno es muy importante y en ese caso aplicamos el clearInterval para detener la cuenta en cada intervalo.
-        console.log('cleanUp')
-        clearInterval(interval) //7 lo importante de terminar la instancia en cada intervalo radica en que de no hacerlo, todas las "instancias" de 
-                               //decremento afectarán a la misma variable countdown, entonces ya no decremenara -1 sino menos muchosssss.
+        return () => {
+          console.log('cleanUp')
+          clearInterval(interval) 
+        }
+    },[countdown]) 
+
+    //2 entonces acá creamos nuestro nuevo efecto y evaluamos, cuando el countdown sea 0, restablecemos la cuenta y cambiamos de color
+    useEffect(() => {
+      if(countdown === 0){
+        setcountdown(5);
+        if(light ==='green'){
+          setLight('yellow')
+          return;
+        }
+        if(countdown === 0){
+          setcountdown(5);
+          if(light ==='red'){
+            setLight('green')
+          }
+        }
+        if(countdown === 0){
+          setcountdown(5);
+          if(light ==='yellow'){
+            setLight('red')
+          }
+        }
+        return;
       }
-    },[countdown]) //4 lo siguiente a pensar es definir a que variable estará atengo el useEffect, en este caso countdown
+
+    },[countdown, light])
 
 
    
@@ -41,6 +65,10 @@ export const TrafficLightWithUseEffect = () => {
 
           <h1 className="text-white text-xl font-thin">Semaforo con use effect</h1>
           <h2 className="text-white text-xl"> Countdown {countdown}</h2>
+          {/* Acá finalmente creamos una barra de progreso donde le pasamos el countdown dividido en 5 y multiplicado por 100 para que vaya desde el ancho maximo descendiendo */}
+          <div className="w-64 bg-gray-700 rounded-full h-2">
+            <div className="bg-blue-500 h-2 rounded-full transition-all duration-1000 ease-linear" style={{width:`${(countdown/5)*100}%`}}></div>
+          </div>
        
           <div className={`w-32 h-32 ${light === 'red' ? colors[light]: 'bg-gray-500'} rounded-full`}></div>
           <div className={`w-32 h-32 ${light === 'yellow' ? colors[light]: 'bg-gray-500'} rounded-full`}></div>
