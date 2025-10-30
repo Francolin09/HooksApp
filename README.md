@@ -1,5 +1,2 @@
-Empezamos borrando los assets y los app .css y .tsx como siempre 
-
-Para esta app usaremos tailwind que te parece asi que partiremos instalandolo, una vez instalado agregamos las configuraciones indicadas en la pagina de tailwind
-
-Hecho todo eso nos crearemos una carpeta 01-useState y dentro un archivo traffictLight
+Ahora profundizaremos un poquito en el useEffect que tal y como dice son efectos o acciones que se deben ejecutar despues de un cambio de estado.
+asi que vamos y nos creamos la carpeta 02-useEffect
