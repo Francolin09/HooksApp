@@ -1,2 +1,1 @@
-Ahora lo que querremos hacer será conectar varios hooks entre si pero manteniendo la responsabilidad de cada uno. asi que para eso
-nos crearemos una carpeta 03-examples y dentro un archivo PokemonPage donde pondremos un componente cualquiera 
+Ahora veremos de una forma un poco más profunda el hook useRef, para eso nos creamos una carpeta 04-useRef y dentro un archivo focusScreen.tsx
