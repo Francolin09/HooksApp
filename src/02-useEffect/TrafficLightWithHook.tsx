@@ -1,7 +1,5 @@
-//1 la labor ahora es hacer lo mismo pero sacando logica de acá y poniendola en un hook personalizado
+
 import { useTrafficLight } from "../hooks/useTrafficLight";
-//2 esta tarea la hiciste solito, te felicito, simplemente copiaste la logica en el hook importaste las cosas necesarias y devolviste
-//las cosas que necesitabamos usar acpa
 
 
 

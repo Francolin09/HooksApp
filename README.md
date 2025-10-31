@@ -1,2 +1,2 @@
-Ahora profundizaremos un poquito en el useEffect que tal y como dice son efectos o acciones que se deben ejecutar despues de un cambio de estado.
-asi que vamos y nos creamos la carpeta 02-useEffect
+Ahora lo que querremos hacer será conectar varios hooks entre si pero manteniendo la responsabilidad de cada uno. asi que para eso
+nos crearemos una carpeta 03-examples y dentro un archivo PokemonPage donde pondremos un componente cualquiera 
