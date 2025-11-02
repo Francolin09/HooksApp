@@ -1,11 +1,12 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import { FocusScreen } from './04-useRef/FocusScreen'
+
+import { TasksApp } from './05-useReducer/TaskApp'
 
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-      <FocusScreen/>
+      <TasksApp/>
   </StrictMode>,
 )
