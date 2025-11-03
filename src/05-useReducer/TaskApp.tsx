@@ -16,37 +16,37 @@ interface Todo {
 export const TasksApp = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [inputValue, setInputValue] = useState('');
-  //1 lo primero que haremos acá será crear este método de addTodo
+
   const addTodo = () => {
-    //2 primero validamos que el input value no esté vacio
+
     if(inputValue.length === 0) return;
 
-    //3 luego creamos una nueva tarea que será del tipo de la interface de arriba 
+
     const newTodo: Todo = {
         id: Date.now(),
         text: inputValue.trim(),
         completed: false
     }
-    //4 finalmente agregamos a nuestro arreglo de todos el nuevo todo 
+
     setTodos([...todos, newTodo]);
     setInputValue('')
 
   };
- //8 acá simplemente debemos cambiar el estado del completed
+
   const toggleTodo = (id: number) => {
-    const updatedTodos = todos.map(todo => { //9 hacemos un map para ejecutar el codigo en cada iteracion
-        if(todo.id === id){ //10 evaluamos que los id sean los mismos
-            return {...todo, completed:!todo.completed}//11si coincide, devolvera el mismo objeto pero cambiando el completed 
+    const updatedTodos = todos.map(todo => { 
+        if(todo.id === id){ 
+            return {...todo, completed:!todo.completed}
         }
-        return todo //12y en todas las iteraciones retornará el todo ya sea que lo modifique o no
+        return todo 
     })
-    setTodos(updatedTodos)//13 y asignamos el nuevo arreglo 
+    setTodos(updatedTodos)
 
   };
-  //5 el siguiente que haremos será el delete porque que es facilito
-  const deleteTodo = (id: number) => { //recibimos un id
-    const updatedTodos = todos.filter((todo) => todo.id !== id);//6 devolvemos todos los que no coincidan 
-    setTodos(updatedTodos) //7 y los asignamos al nuevo listado
+
+  const deleteTodo = (id: number) => { 
+    const updatedTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(updatedTodos)
 
   };
 
