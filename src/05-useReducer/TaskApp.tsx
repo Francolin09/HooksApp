@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useReducer, useState } from 'react';
 
 import { Plus, Trash2, Check } from 'lucide-react';
 
@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { getTaskInitialState, taskReducer } from './reducer/taskReducer';
 
 interface Todo {
   id: number;
@@ -14,39 +15,41 @@ interface Todo {
 }
 
 export const TasksApp = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
+    //1 ahora y no necesitaremos este useState y en su lugar usaremos el reducer
+    //   const [todos, setTodos] = useState<Todo[]>([]); 
+
+
+ //2 el useReducer necesita de un estado inicial, para eso haremos una funcion en taskreducer que nos entregue un estado inicial
+ //y le pasamos los dos valores que necesita que es el reducer y el estado inicial.
+  const [state, dispatch] = useReducer(taskReducer, getTaskInitialState()); //3 una vez hecho esto solucionemos los warning abajo
   const [inputValue, setInputValue] = useState('');
 
   const addTodo = () => {
 
     if(inputValue.length === 0) return;
 
+     //6 nada de esto es necesario porque esta logica la pusimos en el reducer
+    // const newTodo: Todo = {
+    //     id: Date.now(),
+    //     text: inputValue.trim(),
+    //     completed: false
+    // }
 
-    const newTodo: Todo = {
-        id: Date.now(),
-        text: inputValue.trim(),
-        completed: false
-    }
+    // setTodos([...todos, newTodo]);
 
-    setTodos([...todos, newTodo]);
+    //7 ahora solo necesitamos llamar nuestra funcion dispatch, pasarle el tipo, el payload y listoco.
+    dispatch({type: 'ADD_TODO', payload: inputValue})
     setInputValue('')
 
   };
 
+  //8 hacemos lo mismo ahora con las demás funciones y todo funciona fantastico, con nada de logica acá 
   const toggleTodo = (id: number) => {
-    const updatedTodos = todos.map(todo => { 
-        if(todo.id === id){ 
-            return {...todo, completed:!todo.completed}
-        }
-        return todo 
-    })
-    setTodos(updatedTodos)
-
+    dispatch({type:'TOGGLE_TODO', payload:id})
   };
 
   const deleteTodo = (id: number) => { 
-    const updatedTodos = todos.filter((todo) => todo.id !== id);
-    setTodos(updatedTodos)
+    dispatch({type:'DELETE_TODO', payload:id})
 
   };
 
@@ -56,9 +59,14 @@ export const TasksApp = () => {
     }
 
   };
+ //4 para evitar borrar todo nos crearemos una variable con el mismo nombre anterior pero que apunte a los datos que necesitamos
+ //en este caso state.todos y podemos desestructurar esas dos variables que estan abajo. como estan con otro nombre les ponemos un alias
+  const {todos, completed: completedCount, length: totalCount } = state;
 
-  const completedCount = todos.filter((todo) => todo.completed).length;
-  const totalCount = todos.length;
+//   const completedCount = todos.filter((todo) => todo.completed).length;
+//   const totalCount = todos.length;
+
+//5 ahora debemos reemplazar los metodos que fallan por la funcion dispatch
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4">

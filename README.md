@@ -1,1 +1,1 @@
-Aaaaahora veremos que mierda es un reducer asi que nos creamos una carpeta reducer con archivo taskReducer
+Luego de haber desarrollado el reducer debemos ocuparlo asi que vamos al taskApp
