@@ -17,12 +17,21 @@ export type TaskAction =
 | {type: 'DELETE_TODO'; payload:number}
 
 export const getTaskInitialState = ():TaskeState => {
-    return {
-        todos:[],
-        completed:0,
-        pending:0,
-        length:0
+    //3 como acá es donde obtenemos nuestro estado inicial, es acá donde consumiremos la info que esté en el localStorage
+    //entonces, primero obtenemos con el getItem y despues evaluamos si trajo algo o no, si no trajo nada, todo vacio.
+    const localStorageState = localStorage.getItem('task-state');
+    if(!localStorageState){
+        return {
+            todos:[],
+            completed:0,
+            pending:0,
+            length:0
+        }
     }
+    //4 pero si trae algo el retorno será un objeto( que por cierto obtenemos un string pero con json.parse, lo hacemos objeto)
+    //y ese será nuestro estado inicial. fin 
+    return JSON.parse(localStorageState);
+    
 }
 
 export const taskReducer = (state: TaskeState, action:TaskAction ): TaskeState => {
