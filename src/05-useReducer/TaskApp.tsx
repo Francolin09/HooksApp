@@ -18,12 +18,7 @@ export const TasksApp = () => {
 
 
   const [state, dispatch] = useReducer(taskReducer, getTaskInitialState()); 
-  //1 entonces lo que queremos hacer de partida es guardar nuestro state en el localStorage cada vez que el state cambie 
-  //y sabemos que para eso, ideal el useEffect
 
-  //2 acá con el useEffect dejando como dependencia el state seteamos un objeto en el localStorage, esto lo dejará guardado cada vez
-  //que el estado cambie, y el estado cambie siempre que hagamos alguna modificacion, agregar, eliminar actualizar.
-  //ahora nos vamos al getTaskInitialState.
   useEffect(() => {
     localStorage.setItem('task-state',JSON.stringify(state));
   },[state]) 

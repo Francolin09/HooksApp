@@ -1,3 +1,6 @@
+//1 lo primero será importar zod
+import * as z from 'zod/v4'
+
 interface Todo {
     id:number;
     text: string;
@@ -14,11 +17,24 @@ interface TaskeState {
 export type TaskAction = 
 | {type: 'ADD_TODO'; payload:string} 
 | {type: 'TOGGLE_TODO'; payload: number} 
-| {type: 'DELETE_TODO'; payload:number}
+| {type: 'DELETE_TODO'; payload:number};
+
+//2 creamos los esquemas necesarios, esto vendría siendo como crear interfaces pero que se validarán en tiempo de ejecucion 
+const TodoSchema = z.object({
+    id:z.number(),
+    text: z.string(),
+    completed: z.boolean()
+})
+
+const TaskStateSchema = z.object({
+    todos:z.array(TodoSchema),
+    length: z.number(),
+    completed: z.number(),
+    pending: z.number()
+})
 
 export const getTaskInitialState = ():TaskeState => {
-    //3 como acá es donde obtenemos nuestro estado inicial, es acá donde consumiremos la info que esté en el localStorage
-    //entonces, primero obtenemos con el getItem y despues evaluamos si trajo algo o no, si no trajo nada, todo vacio.
+
     const localStorageState = localStorage.getItem('task-state');
     if(!localStorageState){
         return {
@@ -28,9 +44,22 @@ export const getTaskInitialState = ():TaskeState => {
             length:0
         }
     }
-    //4 pero si trae algo el retorno será un objeto( que por cierto obtenemos un string pero con json.parse, lo hacemos objeto)
-    //y ese será nuestro estado inicial. fin 
-    return JSON.parse(localStorageState);
+
+    //3 acá validaremos la estructura con zod (tambien acuerda que acá el TaskStateSchema esta definido como un objeto y del localStorage
+    //obtenemos un string asi que hay que convertirlo a objeto con el parse para poder validarlo)
+    const result = TaskStateSchema.safeParse(JSON.parse(localStorageState));
+    if(result.error){
+        return {
+            todos:[],
+            completed:0,
+            pending:0,
+            length:0
+        }
+    }
+
+    //return JSON.parse(localStorageState);
+    //4 finalmente si no hay ningun error devolvemos como estado inicial el result.data que es la info que acabamos de obtener pero validada.
+    return result.data;
     
 }
 
