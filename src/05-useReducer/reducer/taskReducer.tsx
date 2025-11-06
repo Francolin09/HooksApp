@@ -1,4 +1,3 @@
-//1 lo primero será importar zod
 import * as z from 'zod/v4'
 
 interface Todo {
@@ -19,7 +18,7 @@ export type TaskAction =
 | {type: 'TOGGLE_TODO'; payload: number} 
 | {type: 'DELETE_TODO'; payload:number};
 
-//2 creamos los esquemas necesarios, esto vendría siendo como crear interfaces pero que se validarán en tiempo de ejecucion 
+
 const TodoSchema = z.object({
     id:z.number(),
     text: z.string(),
@@ -45,8 +44,6 @@ export const getTaskInitialState = ():TaskeState => {
         }
     }
 
-    //3 acá validaremos la estructura con zod (tambien acuerda que acá el TaskStateSchema esta definido como un objeto y del localStorage
-    //obtenemos un string asi que hay que convertirlo a objeto con el parse para poder validarlo)
     const result = TaskStateSchema.safeParse(JSON.parse(localStorageState));
     if(result.error){
         return {
@@ -57,8 +54,7 @@ export const getTaskInitialState = ():TaskeState => {
         }
     }
 
-    //return JSON.parse(localStorageState);
-    //4 finalmente si no hay ningun error devolvemos como estado inicial el result.data que es la info que acabamos de obtener pero validada.
+   
     return result.data;
     
 }
