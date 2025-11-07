@@ -1,2 +1,3 @@
-Ahora haremos un jueguito muy entretenido, lo primero que haremos será copiar un gist y pegarlo en un archivo que crearemos
-reducer/ScrambleWords.tsx y nos vamos para allá
+Entonces, nuestro revolucionario juego ya funciona a la perfeccion pero con muchos useState e imagina le queremos poner otras variables
+más estados y cosas entonces igual medio dificil mantenerlo, asi que ahoraaa, haremos que siga funcionando a la perfeccion pero haciendo 
+uso de reducers asi que vamos a la carpeta reducer y le ponemos scrambleWordsReducer.ts
