@@ -8,127 +8,37 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { SkipForward, Play } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { getInitialState, scrambleWordsReducer, scrambleWrodsReducer } from './reducer/scrambleWordsReducer';
+import { getInitialState, scrambleWordsReducer } from './reducer/scrambleWordsReducer';
 
-//9 partiremos borrando/comentando todo lo que no ocuparemos ahora porque se fue para el otro lado
-// const GAME_WORDS = [
-//   'REACT',
-//   'JAVASCRIPT',
-//   'TYPESCRIPT',
-//   'HTML',
-//   'ANGULAR',
-//   'SOLID',
-//   'NODE',
-//   'VUEJS',
-//   'SVELTE',
-//   'EXPRESS',
-//   'MONGODB',
-//   'POSTGRES',
-//   'DOCKER',
-//   'KUBERNETES',
-//   'WEBPACK',
-//   'VITE',
-//   'TAILWIND',
-// ];
-
-// // Esta función mezcla el arreglo para que siempre sea aleatorio
-// const shuffleArray = (array: string[]) => {
-//   return array.sort(() => Math.random() - 0.5);
-// };
-
-// // Esta función mezcla las letras de la palabra
-// const scrambleWord = (word: string = '') => {
-//   return word
-//     .split('')
-//     .sort(() => Math.random() - 0.5)
-//     .join('');
-// };
 
 export const ScrambleWords = () => {
-  //10 obtenemos el estado y el dispatch de nuestro reducer
+
   const [state, dispatch] = useReducer(scrambleWordsReducer, getInitialState());
-  //11 desestructuramos el state y obtenemos todas las propiedades que usaremos 
-  const { words,currentWord,errorCounter,guess,isGameOver,maxAllowErrors,maxSkips,points,scrambledWord,skipCounter,totalWords} = state;
-  //12 ahora solo reemplazamos algunas cosas abajo y comentamos otras que no nos sirven, pone como 12 y 13 esos cambios pero aqui terminamos fin
-  // const [words, setWords] = useState(shuffleArray(GAME_WORDS));
 
-  // const [currentWord, setCurrentWord] = useState(words[0]);
-  // const [scrambledWord, setScrambledWord] = useState(scrambleWord(currentWord));
-  // const [guess, setGuess] = useState('');
-  // const [points, setPoints] = useState(0);
-  // const [errorCounter, setErrorCounter] = useState(0);
-  // const [maxAllowErrors, setMaxAllowErrors] = useState(3);
+  const { words, currentWord, errorCounter, guess, isGameOver, maxAllowErrors, maxSkips, points, scrambledWord, skipCounter, totalWords } = state;
 
-  // const [skipCounter, setSkipCounter] = useState(0);
-  // const [maxSkips, setMaxSkips] = useState(3);
-
-  // const [isGameOver, setIsGameOver] = useState(false);
 
 
   const handleGuessSubmit = (e: React.FormEvent) => {
     // Previene el refresh de la página
     e.preventDefault();
 
+    dispatch({type:'CHECK_ANSWER'}) //13 acá simplemente ponemos el dispatch con el type y listo, todo funciona fin.
 
-    // if (guess === currentWord) {
 
-    //   const newWords = words.slice(1);
-    //   confetti({
-    //     particleCount: 100,
-    //     spread: 120,
-    //     origin: { y: 0.6 }
-    //   })
 
-    //   setPoints(points + 1)
-
-    //   setGuess('')
-
-    //   setWords(newWords);
-
-    //   setCurrentWord(newWords[0]);
-
-    //   setScrambledWord(newWords[0])
-    //   return;
-    // }
-
-    // setErrorCounter(errorCounter + 1);
-    // setGuess('');
-
-    // if (errorCounter + 1 >= maxAllowErrors) {
-    //   setIsGameOver(true)
-    // }
 
   };
 
 
 
   const handleSkip = () => {
-    // if (skipCounter >= maxSkips) return;
-
-    // const updatedWords = words.slice(1);
-
-
-
-
-    // setSkipCounter(skipCounter + 1);
-    // setWords(updatedWords);
-    // setCurrentWord(updatedWords[0]);
-    // setScrambledWord(updatedWords[0]);
-    // setGuess('');
 
   };
 
 
   const handlePlayAgain = () => {
-    // const newArray = shuffleArray(GAME_WORDS)
-    // setPoints(0);
-    // setErrorCounter(0);
-    // setGuess('');
-    // setWords(newArray);
-    // setCurrentWord(newArray[0]);
-    // setIsGameOver(false);
-    // setSkipCounter(0);
-    // setScrambledWord(newArray[0]);
+
 
   };
 
@@ -211,9 +121,12 @@ export const ScrambleWords = () => {
                     type="text"
                     value={guess}
                     onChange={(e) =>
-                      //12
-                      //setGuess(e.target.value.toUpperCase().trim())
-                      console.log(e.target.value)
+                     //4 acá usaremos el reducer, con el dispatch
+                     dispatch({
+                      type:'SET_GUESS',
+                      payload:e.target.value
+                     }) //5 y como ya definimos esto me devolverá el payload pero sin espacios y en mayuscula
+                     //6 Listo ahora iremos a crear otra accion, vamos 
                     }
                     placeholder="Ingresa tu palabra..."
                     className="text-center text-lg font-semibold h-12 border-2 border-indigo-200 focus:border-indigo-500 transition-colors"

@@ -1,4 +1,5 @@
-//1 ya, lo primero será crearnos una interface con los estados que necesitaremos y agregaremos una más que será totalWords
+import { stat } from "fs";
+
 export interface ScrambleWordState {
     currentWord: string;
     errorCounter: number;
@@ -12,7 +13,7 @@ export interface ScrambleWordState {
     words: string[];
     totalWords: number
 }
-//2 luego nos traemos el listado de palabras y lo comentamos allá. Lo traemos porque ahora queremos manipularlo acá 
+
 const GAME_WORDS = [
     'REACT',
     'JAVASCRIPT',
@@ -32,13 +33,14 @@ const GAME_WORDS = [
     'VITE',
     'TAILWIND',
 ];
-//3 definimos las acciones que tendrá nuestro reducer que por ahora no sabemos cuales serán 
+
+//1 definimos la accion 
 export type ScrambledWordActions =
-    | { type: 'NO-SE-QUE-ACCIONES-NECESITARË-AUN' }
-    | { type: 'NO-SE-QUE-ACCIONES-NECESITARË-AUN2' }
+    | { type: 'SET_GUESS', payload:string } //2 y vamos a agregarla al reducer abajo
+    | { type: 'CHECK_ANSWER' }//7 la nueva accion será check_anser, que no necesitará ningun payload, vamos abajo a definir
     | { type: 'NO-SE-QUE-ACCIONES-NECESITARË-AUN3' }
 
-// 4 Nos traemos las funciones que actuan sobre el listado de palabras
+
 const shuffleArray = (array: string[]) => {
     return array.sort(() => Math.random() - 0.5); //!el metodo sort modifica el arreglo, no crea uno nuevo
 };
@@ -51,8 +53,8 @@ const scrambleWord = (word: string = '') => {
         .join('');
 };
 
-//5 establecemos un estado inicial, acuerdate que lo necesita si o si el reducer
-export const getInitialState = (): ScrambleWordState => { //establecemos que será del tipo del estado que definimos arriba 
+
+export const getInitialState = (): ScrambleWordState => {
     const shuffledWords = shuffleArray([...GAME_WORDS]) //!usamos el spread para crear una copia y jugar con la copia, asi no tocamos el arreglo inicial
     return {
         currentWord: shuffledWords[0],
@@ -71,9 +73,41 @@ export const getInitialState = (): ScrambleWordState => { //establecemos que ser
 
 
 
-//6 creamos el reducer que recibe un stado y una accion, ambos tipos ya estan definidos, ahora vamos al scrambleWords.tsx
-export const scrambleWordsReducer = (state: ScrambleWordState, action: ScrambledWordActions) => {
-    switch(action.type){
+export const scrambleWordsReducer = (state: ScrambleWordState, action: ScrambledWordActions): ScrambleWordState => {
+    switch (action.type) {
+        case 'SET_GUESS':
+            return {
+                ...state,
+                guess: action.payload.trim().toUpperCase(),
+            }//3 agregamos el caso SET_GUESS donde nos retorna un nuevo estado que tiene el estado y el guess
+            //entonces ahora que tenemos nuestro molde vamos a usarlo en el onChange del input en scrambleWords
+
+            //8 acá definimos la nueva accion check_answer que se detonará al al hacer click en el boton Enviar adivinanza
+        case 'CHECK_ANSWER': {
+            if(state.currentWord === state.guess){ //9 validamos que el guess que es la palabra ingresada sea igual a la palabra actual 
+                const newWords = state.words.slice(1); //10 si es el caso, definimos unas nuevas palabras, sin la palabra adivinada
+                return { 
+                    //11 luego retornamos un objeto, haciendo copia del state pero reemplazando los valores que se necesitan actualizar
+                    //para la siguiente ronda
+                    ...state,
+                    words: newWords,
+                    points: state.points+1,
+                    guess:'',
+                    currentWord: newWords[0],
+                    scrambledWord: scrambleWord(newWords[0]),
+                    
+                }
+            }
+             return { //12 ahora en el caso que la palabra no sea la misma, devolvemos el state igual pero aumentando 
+                //el contador de errores y validando el gameover. hecho esto nos vamos al metodo handlesubmit a implementarlo
+                ...state,
+                guess:'',
+                errorCounter: state.errorCounter+1,
+                isGameOver:state.errorCounter +1 >= state.maxAllowErrors,
+
+             }
+
+        }    
         default:
             return state;
     }

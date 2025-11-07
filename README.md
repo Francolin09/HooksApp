@@ -1,3 +1,2 @@
-Entonces, nuestro revolucionario juego ya funciona a la perfeccion pero con muchos useState e imagina le queremos poner otras variables
-más estados y cosas entonces igual medio dificil mantenerlo, asi que ahoraaa, haremos que siga funcionando a la perfeccion pero haciendo 
-uso de reducers asi que vamos a la carpeta reducer y le ponemos scrambleWordsReducer.ts
+Anteriormente dejamos todo a medias porque vamos de a poquito pero ahora intentemos ponerle la logica a esta cuestion
+partiremos con lograr que el usuario pueda escribir asi queee vamos al scrambleWordsReducer a crearnos la primera accion 
