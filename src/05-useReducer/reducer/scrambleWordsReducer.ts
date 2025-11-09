@@ -34,11 +34,12 @@ const GAME_WORDS = [
     'TAILWIND',
 ];
 
-//1 definimos la accion 
+
 export type ScrambledWordActions =
-    | { type: 'SET_GUESS', payload:string } //2 y vamos a agregarla al reducer abajo
-    | { type: 'CHECK_ANSWER' }//7 la nueva accion será check_anser, que no necesitará ningun payload, vamos abajo a definir
-    | { type: 'NO-SE-QUE-ACCIONES-NECESITARË-AUN3' }
+    | { type: 'SET_GUESS', payload:string }
+    | { type: 'CHECK_ANSWER' }
+    | { type: 'SKIP_WORD' } //1 AGREGAMOS LA ACCION Y VAMOS ABAJO A PONERLA AL CASE
+    | { type: 'PLAY_AGAIN'} //7 creamos la accion y vamos a agregar el case
 
 
 const shuffleArray = (array: string[]) => {
@@ -79,16 +80,13 @@ export const scrambleWordsReducer = (state: ScrambleWordState, action: Scrambled
             return {
                 ...state,
                 guess: action.payload.trim().toUpperCase(),
-            }//3 agregamos el caso SET_GUESS donde nos retorna un nuevo estado que tiene el estado y el guess
-            //entonces ahora que tenemos nuestro molde vamos a usarlo en el onChange del input en scrambleWords
+            }
 
-            //8 acá definimos la nueva accion check_answer que se detonará al al hacer click en el boton Enviar adivinanza
         case 'CHECK_ANSWER': {
-            if(state.currentWord === state.guess){ //9 validamos que el guess que es la palabra ingresada sea igual a la palabra actual 
-                const newWords = state.words.slice(1); //10 si es el caso, definimos unas nuevas palabras, sin la palabra adivinada
+            if(state.currentWord === state.guess){ 
+                const newWords = state.words.slice(1); 
                 return { 
-                    //11 luego retornamos un objeto, haciendo copia del state pero reemplazando los valores que se necesitan actualizar
-                    //para la siguiente ronda
+               
                     ...state,
                     words: newWords,
                     points: state.points+1,
@@ -98,8 +96,7 @@ export const scrambleWordsReducer = (state: ScrambleWordState, action: Scrambled
                     
                 }
             }
-             return { //12 ahora en el caso que la palabra no sea la misma, devolvemos el state igual pero aumentando 
-                //el contador de errores y validando el gameover. hecho esto nos vamos al metodo handlesubmit a implementarlo
+             return {
                 ...state,
                 guess:'',
                 errorCounter: state.errorCounter+1,
@@ -108,6 +105,38 @@ export const scrambleWordsReducer = (state: ScrambleWordState, action: Scrambled
              }
 
         }    
+        case 'SKIP_WORD':{
+            if(state.skipCounter >=state.maxSkips) return state;//2 validamos que no se haya llegado al maximo de intentos
+            const updatedWords = state.words.slice(1);//3 actualizamos las palabras descartando la primera que se está saltando
+
+            return { //4 devolvemos el estado con las variables actualizadas y vamos a usarla con un dispatch all en scramblewords.tsx
+                ...state,
+                skipCounter: state.skipCounter+1,
+                words: updatedWords,
+                scrambledWord: scrambleWord(updatedWords[0]),
+                guess:''
+            }
+        }
+        //8 Acá lo hiciste de una manera muy bien y solito asi que te felicito, pero hay una forma más facilita que haremos abajo
+        //pero muy bien porque hiciste la parte compleja solito asi que bien.
+
+        case 'PLAY_AGAIN':{
+            const {skipCounter,words,scrambledWord,guess, maxAllowErrors,maxSkips, points,isGameOver,currentWord,errorCounter,totalWords} = getInitialState();
+            return {
+                ...state,
+                skipCounter,
+                words,
+                scrambledWord,
+                guess,
+                maxAllowErrors,
+                maxSkips,
+                currentWord,
+                errorCounter,
+                isGameOver,
+                points,
+                totalWords
+            }
+        }
         default:
             return state;
     }

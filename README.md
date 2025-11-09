@@ -1,2 +1,1 @@
-Anteriormente dejamos todo a medias porque vamos de a poquito pero ahora intentemos ponerle la logica a esta cuestion
-partiremos con lograr que el usuario pueda escribir asi queee vamos al scrambleWordsReducer a crearnos la primera accion 
+Ya hicimos la parte de escribir y adivinar la palabra, ahora crearemos la accion de saltar asi que vamos a agregarlo al scrameblewordsReducer

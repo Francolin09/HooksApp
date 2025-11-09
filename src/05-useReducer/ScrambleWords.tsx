@@ -2,12 +2,11 @@
 // Es necesario componentes de Shadcn/ui
 // https://ui.shadcn.com/docs/installation/vite
 
-import React, { useReducer, useState } from 'react';
+import React, { useReducer } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { SkipForward, Play } from 'lucide-react';
-import confetti from 'canvas-confetti';
 import { getInitialState, scrambleWordsReducer } from './reducer/scrambleWordsReducer';
 
 
@@ -23,7 +22,7 @@ export const ScrambleWords = () => {
     // Previene el refresh de la página
     e.preventDefault();
 
-    dispatch({type:'CHECK_ANSWER'}) //13 acá simplemente ponemos el dispatch con el type y listo, todo funciona fin.
+    dispatch({type:'CHECK_ANSWER'}) 
 
 
 
@@ -33,12 +32,14 @@ export const ScrambleWords = () => {
 
 
   const handleSkip = () => {
-
+    dispatch({type: 'SKIP_WORD'}) //5 acá la usamos, le pasamos el tipo y listo, perfecto
   };
+
+  //6 ahora podemos hacer lo mismo para habilitar el boton de jugar de nuevo asi que vamos a crearnos otra accion 
 
 
   const handlePlayAgain = () => {
-
+    dispatch({type: 'PLAY_AGAIN'})
 
   };
 
@@ -121,12 +122,11 @@ export const ScrambleWords = () => {
                     type="text"
                     value={guess}
                     onChange={(e) =>
-                     //4 acá usaremos el reducer, con el dispatch
+             
                      dispatch({
                       type:'SET_GUESS',
                       payload:e.target.value
-                     }) //5 y como ya definimos esto me devolverá el payload pero sin espacios y en mayuscula
-                     //6 Listo ahora iremos a crear otra accion, vamos 
+                     })
                     }
                     placeholder="Ingresa tu palabra..."
                     className="text-center text-lg font-semibold h-12 border-2 border-indigo-200 focus:border-indigo-500 transition-colors"
