@@ -2,12 +2,13 @@
 // Es necesario componentes de Shadcn/ui
 // https://ui.shadcn.com/docs/installation/vite
 
-import React, { useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { SkipForward, Play } from 'lucide-react';
 import { getInitialState, scrambleWordsReducer } from './reducer/scrambleWordsReducer';
+import confetti from 'canvas-confetti';
 
 
 export const ScrambleWords = () => {
@@ -17,6 +18,14 @@ export const ScrambleWords = () => {
   const { words, currentWord, errorCounter, guess, isGameOver, maxAllowErrors, maxSkips, points, scrambledWord, skipCounter, totalWords } = state;
 
 
+  useEffect(() => {
+    if(points===0) return;
+    confetti({
+      particleCount:100,
+      spread:120,
+      origin: {y:0.6}
+    })
+  },[points])
 
   const handleGuessSubmit = (e: React.FormEvent) => {
     // Previene el refresh de la página
@@ -32,14 +41,15 @@ export const ScrambleWords = () => {
 
 
   const handleSkip = () => {
-    dispatch({type: 'SKIP_WORD'}) //5 acá la usamos, le pasamos el tipo y listo, perfecto
+    dispatch({type: 'SKIP_WORD'})
   };
-
-  //6 ahora podemos hacer lo mismo para habilitar el boton de jugar de nuevo asi que vamos a crearnos otra accion 
 
 
   const handlePlayAgain = () => {
-    dispatch({type: 'PLAY_AGAIN'})
+    dispatch({type: 'PLAY_AGAIN', payload: getInitialState()}) //acá finalmente le pasamos como payload el getinitialState
+    //que si bien lo que hiciste anteriormente estuvo perfecto y maravilloso, porque ocupamos la funcion alla mismo y no necesitabamos
+    //importarla acá, la idea es que ocupemos la estructura del reducer con el type y el payload pero meh. fin
+    //por cierto arriba pondremos la funcion del conffeti con un useeffect y chao pescao
 
   };
 

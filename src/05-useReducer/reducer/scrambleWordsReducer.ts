@@ -1,4 +1,4 @@
-import { stat } from "fs";
+
 
 export interface ScrambleWordState {
     currentWord: string;
@@ -38,8 +38,9 @@ const GAME_WORDS = [
 export type ScrambledWordActions =
     | { type: 'SET_GUESS', payload:string }
     | { type: 'CHECK_ANSWER' }
-    | { type: 'SKIP_WORD' } //1 AGREGAMOS LA ACCION Y VAMOS ABAJO A PONERLA AL CASE
-    | { type: 'PLAY_AGAIN'} //7 creamos la accion y vamos a agregar el case
+    | { type: 'SKIP_WORD' } 
+    | { type: 'PLAY_AGAIN', payload: ScrambleWordState} //1 la forma correcta seria asignando un payload del tipo del stado
+    //2 ahora vamos abajo y la pasamos un payload
 
 
 const shuffleArray = (array: string[]) => {
@@ -106,10 +107,10 @@ export const scrambleWordsReducer = (state: ScrambleWordState, action: Scrambled
 
         }    
         case 'SKIP_WORD':{
-            if(state.skipCounter >=state.maxSkips) return state;//2 validamos que no se haya llegado al maximo de intentos
-            const updatedWords = state.words.slice(1);//3 actualizamos las palabras descartando la primera que se está saltando
+            if(state.skipCounter >=state.maxSkips) return state;
+            const updatedWords = state.words.slice(1);
 
-            return { //4 devolvemos el estado con las variables actualizadas y vamos a usarla con un dispatch all en scramblewords.tsx
+            return { 
                 ...state,
                 skipCounter: state.skipCounter+1,
                 words: updatedWords,
@@ -117,25 +118,9 @@ export const scrambleWordsReducer = (state: ScrambleWordState, action: Scrambled
                 guess:''
             }
         }
-        //8 Acá lo hiciste de una manera muy bien y solito asi que te felicito, pero hay una forma más facilita que haremos abajo
-        //pero muy bien porque hiciste la parte compleja solito asi que bien.
 
-        case 'PLAY_AGAIN':{
-            const {skipCounter,words,scrambledWord,guess, maxAllowErrors,maxSkips, points,isGameOver,currentWord,errorCounter,totalWords} = getInitialState();
-            return {
-                ...state,
-                skipCounter,
-                words,
-                scrambledWord,
-                guess,
-                maxAllowErrors,
-                maxSkips,
-                currentWord,
-                errorCounter,
-                isGameOver,
-                points,
-                totalWords
-            }
+        case 'PLAY_AGAIN':{ //3 acá simplemente indicamos que nos devuelva el payload que arriba ya definimos que sería del estado
+            return action.payload; //4 entonces ahora vamos al dispatch
         }
         default:
             return state;
