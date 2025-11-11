@@ -46,10 +46,8 @@ export const ScrambleWords = () => {
 
 
   const handlePlayAgain = () => {
-    dispatch({type: 'PLAY_AGAIN', payload: getInitialState()}) //acá finalmente le pasamos como payload el getinitialState
-    //que si bien lo que hiciste anteriormente estuvo perfecto y maravilloso, porque ocupamos la funcion alla mismo y no necesitabamos
-    //importarla acá, la idea es que ocupemos la estructura del reducer con el type y el payload pero meh. fin
-    //por cierto arriba pondremos la funcion del conffeti con un useeffect y chao pescao
+    dispatch({type: 'PLAY_AGAIN', payload: getInitialState()}) 
+
 
   };
 

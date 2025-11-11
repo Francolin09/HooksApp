@@ -39,8 +39,8 @@ export type ScrambledWordActions =
     | { type: 'SET_GUESS', payload:string }
     | { type: 'CHECK_ANSWER' }
     | { type: 'SKIP_WORD' } 
-    | { type: 'PLAY_AGAIN', payload: ScrambleWordState} //1 la forma correcta seria asignando un payload del tipo del stado
-    //2 ahora vamos abajo y la pasamos un payload
+    | { type: 'PLAY_AGAIN', payload: ScrambleWordState} 
+
 
 
 const shuffleArray = (array: string[]) => {
@@ -119,8 +119,8 @@ export const scrambleWordsReducer = (state: ScrambleWordState, action: Scrambled
             }
         }
 
-        case 'PLAY_AGAIN':{ //3 acá simplemente indicamos que nos devuelva el payload que arriba ya definimos que sería del estado
-            return action.payload; //4 entonces ahora vamos al dispatch
+        case 'PLAY_AGAIN':{ 
+            return action.payload;  
         }
         default:
             return state;
