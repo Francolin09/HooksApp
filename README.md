@@ -1,0 +1,1 @@
+Siguiendo un poco con las cosas que probablemente no usaremos pero debemos saber, veremos el hook useMemo. Para eso creemos un nuevo componente llamado MemoCounter y ahi usaremos el hook de contador que creamos en el pasado.

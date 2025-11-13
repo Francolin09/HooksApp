@@ -7,13 +7,10 @@ export const MemoHook = () => {
   const [title, setTitle] = useState("Super titulo especial")
   const [subtitle, setSubtitle] = useState("Super Subtitulo especial")
 
-//1 entonces, continuando con la cosa ahora debemos memorizar la funcion para que no nos pase el re renderizado
-//y para eso existe el useCallback
-//2 pero ojo que si dejamos el arreglo de dependencias vacio, siempre queda inmutable pero y si necesitamos mostrar un valor que si cambia?
-//por ejemplo queremos mostrar el subtitulo
+
   const handleMyApiCall = useCallback(() => {
     console.log("Llamando a la apipipi"+ subtitle)
-  },[subtitle]); //3 ahi tenemos que pasarle el subtitulo como dependencia para que cuando este cambie si se renderice de nuevo todo.finn
+  },[subtitle]);
   
   return (
     <div className="bg-gradient flex flex-col gap-4">
