@@ -1,1 +1,0 @@
-ahora veremos la memorizacion de funciones weno? vamos al mySubtitle.tsx
