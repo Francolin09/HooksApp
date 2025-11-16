@@ -1,1 +1,2 @@
-Siguiendo un poco con las cosas que probablemente no usaremos pero debemos saber, veremos el hook useMemo. Para eso creemos un nuevo componente llamado MemoCounter y ahi usaremos el hook de contador que creamos en el pasado.
+Ahora conoceremos un nuevo hook de react que se llama useOptimistic, usualmente se usa en combinacion con otro hook pero ahi iremos viendo
+asi que lo primero será crearnos un nuevo componente en 07-useOptimistic/instagrom.tsx y nos pegaremos el gist correspondiente
