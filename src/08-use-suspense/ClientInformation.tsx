@@ -1,32 +1,22 @@
-//1 empezamos creando un componente de mierda, la idea es la informacion que mostremos no sea estática sino dinámica
-//para eso vamos al get-User.action a simulaaar como que hacemos una peticion
 
-import { useEffect } from "react"
-import { getUserAction } from "./api/get-user.action"
+import { use, useEffect, type Usable } from "react"
+import { getUserAction, type User } from "./api/get-user.action"
 
-export const ClientInformation = ({id}: {id:number}) => {
+//const userPromise = getUserAction(1) //1 en un principio pensamos que esta era la solucion pero estos deja poniendole el id manual y no po
+//asi que nos creamos una interface con un metodo Usable<User> el tipo user viene del get.user.action
+interface Props {
+    getUser: Usable<User>
+}
+export const ClientInformation = ({getUser}: Props) => { //desestructuramos acá
 
-    //5 Ahora piensa como le hacemos para ocupar esa info que viene del get-user??
-    //propongamos opciones 
-    //! 6 lo que hemos venido haciendo sería algo asi, pero esta malisimo
-    // useEffect(() => {
-    //     const user = getUserAction(id); //pero esto necesitaria un await, y no podemos usar await en el useEffect NUNCA!!!
-    // },[])
-
-    //7 entonces lo correcto seria hacer esto
-    useEffect(()=> {
-        getUserAction(id).then(user => console.log(user))
-    },[id])
-
-    //8 pero si queremos asignar nuestra info al componente se debe actualizar el estado por lo que deberiamos tener un setState
-    //y claro si estuvieramos en next podriamos usar server components y pasarnos todo por la raja pero acá no se puede asi que en el siguiente
-    //veremos como hacerle 
+ const user = use(getUser); //y acá usamos el use pasandole el getUser, porque el use necesita un tipo Usable
+ //entonces ahora vamos al main y allá llamamos al metodo del get-userAction y se lo pasamos como prop al componente este
 
   return (
     <div className="bg-gradient flex flex-col gap-4">
-        <h2 className="text-4xl font-thin text-white">Francolin -#123</h2>
-        <p className="text-white text-2xl">Santiago, Chile</p>
-        <p className="text-white text-xl">un rol de usuario</p>
+        <h2 className="text-4xl font-thin text-white">{user.name}- #{user.id}</h2>
+        <p className="text-white text-2xl">{user.location}</p>
+        <p className="text-white text-xl">{user.role}</p>
     </div>
   )
 }
