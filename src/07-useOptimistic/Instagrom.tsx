@@ -1,7 +1,5 @@
 import {toast} from 'sonner';
 import { useOptimistic, useState, useTransition } from 'react';
-//1 ahora veremos como lanzar errores y como manejarlos primero lo haremos de la forma mas facil y despues usaremos un paquete pa que se vea bonito
-
 
 
 interface Comment {
@@ -40,19 +38,11 @@ export const Instagrom = () => {
 
 
     startTransition(async () => {
-        //2 la forma facil sería simular acá que todo falló entonces no hacemos el setComment
+
         await new Promise((resolve) => setTimeout(resolve,3000));
     
-        // console.log("mensaje posteado")
-        // setComments(prev => [...prev,{ 
-        //     id: new Date().getTime(),
-        //     text: messageText 
-        // }])
 
-        //3 y en vez de esto, dejamos el estado como estaba no mas
-        setComments((prev)=> prev); //4 y listo, al final acá simulamos que por alguna razon no se pude hacer el setcomment agregando un nuevo registro
-                                    //si eso pasa, lo dejamos como estaba. 
-        //5 hasta ahi esta listo pero usemos el paquete pára que muestre un mensaje
+        setComments((prev)=> prev); 
         toast("error al agregar el comentario",{
             description:'intente nuevamente',
             duration:10000,
@@ -62,7 +52,7 @@ export const Instagrom = () => {
                 onClick: () => toast.dismiss()
             }
         })            
-        //6 para que esto funcione hay que agregarlo en el componente superior, por ahora lo pondremos en el main y listo, eso seria todo.                
+              
         
     })
 

@@ -1,14 +1,12 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
+import { ClientInformation } from './08-use-suspense/ClientInformation'
 
-import { Instagrom } from './07-useOptimistic/instagrom'
-import {Toaster} from 'sonner'
 
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-      <Toaster/>
-      <Instagrom/>
+     <ClientInformation id={100} />
   </StrictMode>,
 )

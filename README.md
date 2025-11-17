@@ -1,2 +1,3 @@
-Ahora conoceremos un nuevo hook de react que se llama useOptimistic, usualmente se usa en combinacion con otro hook pero ahi iremos viendo
-asi que lo primero será crearnos un nuevo componente en 07-useOptimistic/instagrom.tsx y nos pegaremos el gist correspondiente
+Comenzaremos a ver la api use y el suspense, acá empezaremos con conceptos más complicados asi que presta atencion y vamos a crearnos una
+carpeeta 08-use-suspense y dentro un componente ClientIngormation, además nos crearemos una carpeta llamada api y dentro un get-user.action.ts
+hecho esto vamos al ClientInformation
