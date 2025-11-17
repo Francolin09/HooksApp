@@ -1,5 +1,21 @@
-import { useState } from 'react';
-//1 lo primero que haremos acá será entender un poco este formulario además de simular el comportamiento comun que tendría 
+import { useOptimistic, useState } from 'react';
+
+//1 ahora si que haremos uso del useOptimistic dejando además ese delay de 3 segundos y viendo como se comporta
+//la idea de esta cuestion es generar una accion optimista mientras se realizan procesos como el posteo de un comentario
+//en este caso es mostrar el comentario inmediatamente en la ui, incluso si no se ha completado el posteo en el servidor, ahora que si este 
+//falla, simplemente se hace rollback y no se muestra nada 
+
+//1.5   //Esta es la estrcutura gneral del usOptimistic
+
+//   const [optimisticState, addOptimistic] = useOptimistic(
+//     currentValue, //1.6current value es el estado real actual del componente
+//     (state, newValue) => { 1.7 acá state, hace referencia al estado optimista actual, no al real, sino al temporal y el newValue
+                           //es el valor que se le pasara cuando usemos el addOptimistic
+//       return /* 1.8 acá definimos lo que queremos mostrar en la ui temporalmente */
+//     }
+//   );
+
+
 interface Comment {
   id: number;
   text: string;
@@ -12,26 +28,44 @@ export const Instagrom = () => {
     { id: 2, text: 'Me encanta 🧡' },
   ]);
 
-  //4 Ahora pensemos para manejar el formulario que info necesita esta funcion???
-//   const handleAddComment = async () => {
-//     console.log('Nuevo comentario');
-//   };
+  //2 usemos el useOptimistic. este devuelve un arreglo y necesita uno o dos argumentos. estos son el estado que queremos manejar y una funcion 
+  //reducer. 
+  //3 entonces expliquemos primero en nuestro optmisticComments tendremos el arreglo de datos optimistas (temporales)
+  //y el add pos será como un useState pero para este estado temporal. 
+  //Ahora bien el useoptimistic recibe los comments que son nuestro estado actual y solo se usarán como molde o base para crear el estado temporal
+  //luego recibimos una funcion reducer con dos argumentos, currentComments que es igual al comments pero solo la primera vez. como dijimos 
+  //acá el comments no se toca, solo es el molde, lo que modificamos es el currentComments y cada vez que usemos el addOptimistic este cambiará
+  //se puede pensar tambien que el comments es como un backup en caso de que quede la cagá volvemos al estado inicial. 
+  //finalmente devolvemos un arreglo donde esparcimos todos los comentarios que existan de manera temporal, además de agregar el comentario nuevo
+  //que estamos agregando. junto con la bandera optimistic true y este qarreglo será al final el valor de optimisticComments
+  const [optmisticComments, addOptimisticComment] = useOptimistic(comments, (currentComments, newCommentText: string) => {
+    return [...currentComments, {
+        id: new Date().getTime(),
+        text: newCommentText,
+        optimistic: true
 
-  //5 pos necesita el formulario y sabemos que abajo en el action el handleAddComment es lo mismo que event => handleAddComment(event) entonces
-  //se lo pasamos acá como argumento
+    }]
+  })
+
   const handleAddComment = async (form: FormData) => {
-    //6 el tipo formData nos permite obtener el objeto del formulario cuyos campos tengan el atributo name, en nuestro caso el input
-    const messageText = form.get('post-message') as string //7 acá obtenemos el campo del formulario con el name = "post-message", esto nos sirve mucho
-    //porque con el form ahora podriamos obtener todos los campos del formulario que quisieramos.
-    console.log('Nuevo comentario', messageText);
 
-    //8 simularemos la latencia de un post y lo que demora en llegar al servidor, para luego ser mostrado en pantalla
+    const messageText = form.get('post-message') as string 
+    console.log('Nuevo comentario', messageText);
+    //4 ahora para usarlo simplemente usamos el addOptimisticComment y le pasamos el mensaje. ten en cuenta que acá el mensaje corresponde al 
+    //segundo argumento, ya que el primero que que es currentComment ya lo maneja react internamente. 
+
+    addOptimisticComment(messageText);
+
+    //5 con una promesaz y un setTimeout simulamos el retardo
+
     await new Promise((resolve) => setTimeout(resolve,3000));
 
     console.log("mensaje posteado")
-    setComments(prev => [...prev,{
+    setComments(prev => [...prev,{ //6 y finalmente en el setcomment establecemos las propiedades que seran el id y el text que será lo que escribimos
+        //en el input. hecho esto y teniendo abajo la linea comment.optimistic && nos mostrara un mensaje de enviando junto con el comentario aun cuando
+        //aun no se haya procesado en el servidor. fin.
         id: new Date().getTime(),
-        text: messageText //9 acá nos daba un error de tipo que no entendi bien y se soluciono poniendo el as string arriba
+        text: messageText 
     }])
   };
  
@@ -51,7 +85,7 @@ export const Instagrom = () => {
 
       {/* Comentarios */}
       <ul className="flex flex-col items-start justify-center bg-gray-300 w-[500px] p-4">
-        {comments.map((comment) => (
+        {optmisticComments.map((comment) => (
           <li key={comment.id} className="flex items-center gap-2 mb-2">
             <div className="bg-blue-500 rounded-full w-10 h-10 flex items-center justify-center">
               <span className="text-white text-center">A</span>
@@ -67,10 +101,10 @@ export const Instagrom = () => {
       {/* Formulario de comentarios */}
       <form
         action={handleAddComment} 
-        // 3 aca en este accion es donde recibiremos las instrucciones de como manejar el formulario con el metodo handleAddComment
+
         className="flex flex-col items-center justify-center bg-gray-300 w-[500px] rounded-b-3xl p-4"
       >
-        {/* 2 Algo destaccable es que acá no manejaremos el formulario dentro de la etiqueta input sino que lo pondremos como action dentro del form */}
+     
         <input
           type="text"
           name="post-message"
