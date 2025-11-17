@@ -1,5 +1,7 @@
+import {toast} from 'sonner';
 import { useOptimistic, useState, useTransition } from 'react';
-//1 hasta ahora funciona, pero solo en el caso de que funcione bien, pero y si falla? o si hay registros duplicados? eso haremos 
+//1 ahora veremos como lanzar errores y como manejarlos primero lo haremos de la forma mas facil y despues usaremos un paquete pa que se vea bonito
+
 
 
 interface Comment {
@@ -8,13 +10,11 @@ interface Comment {
   optimistic?: boolean;
 }
 
-let lastId = 2; //2 primero pondremos cual es el ultimo id que tenemos y despues dentro del useOptimistic lo aumentamos y asignamos, eso no mas
+let lastId = 2;
 
-//3 ahora conoceremos el hook useTransition el cual permite marcar ciertas actualizaciones de estado como transiciones, es decir
-//actualizaciones que pueden demorar pero no deberian bloquear la ui 
 
 export const Instagrom = () => {
-  const [isPending, startTransition] = useTransition(); //4 acá definimos el hook que tendrá si esta pendiente o no y una accion 
+  const [isPending, startTransition] = useTransition();
   
   const [comments, setComments] = useState<Comment[]>([
     { id: 1, text: '¡Gran foto!' },
@@ -38,29 +38,34 @@ export const Instagrom = () => {
 
     addOptimisticComment(messageText);
 
-    //5 acá es donde debemos usar el startTransition y es dentro de el donde debemos colocar todo el codigo bloqueante
 
     startTransition(async () => {
+        //2 la forma facil sería simular acá que todo falló entonces no hacemos el setComment
         await new Promise((resolve) => setTimeout(resolve,3000));
     
-        console.log("mensaje posteado")
-        setComments(prev => [...prev,{ 
-            id: new Date().getTime(),
-            text: messageText 
-        }])
+        // console.log("mensaje posteado")
+        // setComments(prev => [...prev,{ 
+        //     id: new Date().getTime(),
+        //     text: messageText 
+        // }])
+
+        //3 y en vez de esto, dejamos el estado como estaba no mas
+        setComments((prev)=> prev); //4 y listo, al final acá simulamos que por alguna razon no se pude hacer el setcomment agregando un nuevo registro
+                                    //si eso pasa, lo dejamos como estaba. 
+        //5 hasta ahi esta listo pero usemos el paquete pára que muestre un mensaje
+        toast("error al agregar el comentario",{
+            description:'intente nuevamente',
+            duration:10000,
+            position:'top-right',
+            action: {
+                label:'cerrar',
+                onClick: () => toast.dismiss()
+            }
+        })            
+        //6 para que esto funcione hay que agregarlo en el componente superior, por ahora lo pondremos en el main y listo, eso seria todo.                
         
     })
-    //6 ahora ponemos este codigo adentro del startTransition
-    // await new Promise((resolve) => setTimeout(resolve,3000));
-    
-    //     console.log("mensaje posteado")
-    //     setComments(prev => [...prev,{ 
-    //         id: new Date().getTime(),
-    //         text: messageText 
-    //     }])
 
-    //7 igual acá no se ve mucho el efecto porque no era tan bloqueante la cuestion incluso podemos ponerle en el boton un disabled si el ispending = true
-    //8 eso hara que no nos deje ingresar nuevos valores si no se ha terminado de postear el primero. fin 
 
   };
 
