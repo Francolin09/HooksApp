@@ -21,5 +21,3 @@ export const appRouter = createBrowserRouter([
         element: <Navigate to={'/'}/>
     }
 ])
-//1 acá crearemos varias rutas y que cada una renderice un componente distinto. una vez definidas nos vamos a usarlas al componente principal
-//professionalApp
