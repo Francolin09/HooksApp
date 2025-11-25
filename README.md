@@ -1,1 +1,1 @@
-ahora pongamosle alguna weá a nuestras paginas asi que vamos primero al aboutpage
+ya ahora queremos poder consumir nuestro contexto pero antes completemos los metodos definidos en nuestro userContextProvider

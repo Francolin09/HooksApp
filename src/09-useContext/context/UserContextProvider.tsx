@@ -1,12 +1,8 @@
-//5 acá comenzaremos con nuestro contexto, sabemos que el contexto nos servirá para compartir informacion entre componentes sin necesidad
-//de pasar por cada uno. La estructura y uso del contexto es, crear el contexto, crear un provider y consumir el contexto
-
 
 import { createContext, useState, type PropsWithChildren } from "react"
-import type { User } from "../data/user-mock.data"
+import { users, type User } from "../data/user-mock.data"
 
-//6 primero crearemos una interface que tendrá el tipo de las props (children) que pasaremos 
-//7 tambien crearemos el archivo user-mock.data.ts con una data mockeada para usar acá 
+
 type AuthStatus =  'checking' | 'authenticated'|'not-authenticated';
 interface UserContextProps {
   //state
@@ -18,28 +14,38 @@ interface UserContextProps {
   logout: () => void;
 
 }
-//8 creamos el contexto
+
 export const UserContext = createContext( {} as UserContextProps );
 
-//9acá crearemos el provider que es quien entrega el valor global
 export const UserContextProvider = ({children}: PropsWithChildren) => {
-  //10 acá crearemos los estados que necesitamos manejar
+
   const [authStatus, setAuthStatus] = useState<AuthStatus>('checking')
 
   const [user, setUser] = useState<User|null>(null);
-
-  //11 ahora los metodos que necesitamos segun la interface 
+ //1 acá haremos algunas validaciones y setearemos los estados eso es todo
+ //hecho eso vamos al LoginPage a usar el contexto y modificar cosas 
   const handleLogin = (userId:number) => {
+    const user = users.find( user => user.id ===  userId);
+    if(!user){
+      console.log("Usuario no encontrado")
+      setUser(null);
+      setAuthStatus('not-authenticated');
+      return false;
+    }
     console.log({userId});
+    setUser(user);
+    setAuthStatus('authenticated');
     return true;
   }
 
   const handleLogout = () => {
     console.log('logoutttt')
+    setUser(null);
+    setAuthStatus('not-authenticated');
   }
 
   return (
-    //!en las versiones anteriores era comun ver el <UserContext.provider> </UserContext.provider> pero ya no es necesario
+
     <UserContext value={{
       authStatus:authStatus,
       user:user,
@@ -48,8 +54,7 @@ export const UserContextProvider = ({children}: PropsWithChildren) => {
     }}>
       {children}
     </UserContext>
-    //12 entonces ahora retornamos este userContext y podemos ir al componente principal o de mas alto orden a utilizarlo
-    //asi que vamos al professionalApp
+
     
   )
 }

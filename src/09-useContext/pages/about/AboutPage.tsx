@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router'
 
-//1 comenzaremos haciendo el uso de Link, este es como un <a></a> peeero no recarga toda la pagina, más eficiente
+
 export const AboutPage = () => {
   return (
    <div className='flex flex-col items-center justify-center min-h-screen'>
@@ -13,5 +13,5 @@ export const AboutPage = () => {
      </div>
    </div>
   )
-  //2ahora vamos a hacer lo mismo al LoginPage 
+
 }
