@@ -1,2 +1,1 @@
-Como tenemos todo en memoria del navegador, si recargamos la pagina perdemos todo el contexto que teniamos, asi que debemos generar persistencia.
-vamos al UserContextProvider
+ya lo que haremos será algunos renderizados condicionales dependiendo del estado de la autenticacion asi que vamos al aboutPage
