@@ -56,7 +56,9 @@ export const UserContextProvider = ({children}: PropsWithChildren) => {
     const storedUserId = localStorage.getItem('userId'); 
     if(storedUserId){ 
       handleLogin(+storedUserId);
+      return;
     }
+    handleLogout();
   },[])
 
   return (
